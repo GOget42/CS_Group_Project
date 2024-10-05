@@ -1,0 +1,12 @@
+# Default list of files and directories for git to ignore
+# Ignore PyCharm project files
+.idea/
+__pycache__/
+*.py[cod]
+*.pyo
+venv/
+.venv/
+env/
+.ipynb_checkpoints/
+.DS_Store
+Thumbs.db
