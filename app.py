@@ -5,6 +5,9 @@ import numpy as np
 from datetime import date
 import pydeck as pdk
 
+# something for the map to work (idk what)
+MAPBOX_API_TOKEN = "pk.eyJ1IjoidmljaWlpIiwiYSI6ImNtM211cmxkZDA3YTIya3Mzc2Vzd3JwaG0ifQ.Zzo3SdjM9RiwV1cLSnRIyw"
+
 #title
 st.header("Wreckognizer")
 st.markdown("Predict. Protect. Prevent.")
@@ -46,17 +49,22 @@ option = st.selectbox(
 
 st.write("You selected:", option)
 
-#######
+######
 
-df = pd.DataFrame(
-    np.random.randn(100,2) / [50, 50] + [47.366669, 8.55],
-    columns=["lat", "lon"],
-)
+##old map
+# df = pd.DataFrame(
+   # np.random.randn(100,2) / [50, 50] + [47.366669, 8.55],
+    # columns=["lat", "lon"],
+# )
 
-st.subheader("This is a randomized scatterplot of the city of Zürich")
-st.map(df)
+# st.subheader("This is a randomized scatterplot of the city of Zürich")
+# st.map(df)
+
+######
 
 ### new map
+st.subheader("New, better map")
+
 # data for the coordinated of city of zürich
 data = pd.DataFrame({
     'latitude': [47.366669],
@@ -80,7 +88,12 @@ layer = pdk.Layer(
     get_colour=[255, 0, 0],
 )
 
-# display map on the website streamlit
+# display style (like google maps)
+deck = pdk.Deck(
+    layers=[layer], 
+    initial_view_state=view_state, 
+    map_style="mapbox://styles/mapbox/streets-v11",
+    )
 
-deck = pdk.Deck(layers=[layer], initial_view_state=view_state)
+# show the map in streamlit
 st.pydeck_chart(deck)
