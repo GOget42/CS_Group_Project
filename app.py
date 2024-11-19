@@ -66,7 +66,7 @@ data = pd.DataFrame({
 # fixed place of map
 view_state = pdk.ViewState(
     latitude=data['latitude'].mean(),
-    longitude=data['londitude'].mean(),
+    longitude=data['longitude'].mean(),
     zoom=10,
     pitch=0,
 )
@@ -75,7 +75,7 @@ view_state = pdk.ViewState(
 layer = pdk.Layer(
     "ScatterplotLayer",
     data,
-    get_position='[longitude, latide]',
+    get_position='[longitude, latitude]',
     get_radius=100,
     get_colour=[255, 0, 0],
 )
