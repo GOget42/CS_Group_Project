@@ -11,23 +11,28 @@ MAPBOX_API_TOKEN = "pk.eyJ1IjoidmljaWlpIiwiYSI6ImNtM211cmxkZDA3YTIya3Mzc2Vzd3Jwa
 #title
 st.header("Wreckognizer")
 st.markdown("Predict. Protect. Prevent.")
-st.text("Wreckognize leverages cutting-edge machine learning to analyze accident data and predit the severity and likelihood of personal injury or property damage. Designed for decision-makers and analysts, our tool transforms raw data into actionable insights, empowering communities and organizations to enhance saftey and prepare for potential risks. ")
+st.write("Wreckognize leverages cutting-edge machine learning to analyze accident data and predit the severity and likelihood of personal injury or property damage. Designed for decision-makers and analysts, our tool transforms raw data into actionable insights, empowering communities and organizations to enhance saftey and prepare for potential risks. ")
 
-st.text("To find the risk level at a specific date at a specific place, please input the following:")
+st.write("To find the risk level at a specific date at a specific place, please input the following:")
 
 #######
 
 #date picker
 st.subheader("Date Picker ")
 
-#date
 default_date = date.today() 
 
-# Date input widget
 selected_date = st.date_input("Choose a date:", value=default_date)
 
-# Display the selected date
 st.write("You selected:", selected_date)
+
+# time picker
+st.subheader("Time Picker")
+
+default_time = datetime.datetime.now().time()
+
+t = st.time_input("Chose a time of day:", value=default_time)
+st.write("You selected", t)
 
 ########
 
@@ -75,7 +80,7 @@ data = pd.DataFrame({
 view_state = pdk.ViewState(
     latitude=data['latitude'].mean(),
     longitude=data['longitude'].mean(),
-    zoom=10,
+    zoom=15,
     pitch=0,
 )
 
