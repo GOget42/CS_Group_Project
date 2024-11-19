@@ -30,7 +30,7 @@ st.write("You selected:", selected_date)
 # time picker
 st.subheader("Time Picker")
 
-default_time = datetime.datetime.now().time()
+default_time = datetime.time(datetime.datetime.now().hour, datetime.datetime.now().minute)
 
 t = st.time_input("Chose a time of day:", value=default_time)
 st.write("You selected", t)
@@ -77,17 +77,19 @@ data = pd.DataFrame({
     'longitude': [8.55],
 })
 
+latitude_zürich_middle = 47.366669
+longitude_zürich_middle = 8.55
+
 # fixed place of map
 view_state = pdk.ViewState(
-    latitude=data['latitude'].mean(),
-    longitude=data['longitude'].mean(),
-    zoom=15,
+    latitude=latitude_zürich_middle,
+    longitude=longitude_zürich_middle,
+    zoom=12,
     pitch=0,
 )
 
 # deck.gl map
 layer = pdk.Layer(
-    "ScatterplotLayer",
     data,
     get_position='[longitude, latitude]',
     get_radius=100,
