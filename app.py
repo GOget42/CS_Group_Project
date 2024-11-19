@@ -5,6 +5,7 @@ import numpy as np
 from datetime import date
 import datetime
 import pydeck as pdk
+from geopy.geocoders import Nominatim
 
 # something for the map to work (idk what)
 MAPBOX_API_TOKEN = "pk.eyJ1IjoidmljaWlpIiwiYSI6ImNtM211cmxkZDA3YTIya3Mzc2Vzd3JwaG0ifQ.Zzo3SdjM9RiwV1cLSnRIyw"
@@ -36,7 +37,7 @@ t = st.time_input("Chose a time of day:", value=default_time)
 st.write("You selected", t)
 
 ########
-
+# radius picker (maybe useless since you can zoom on the map)
 st.subheader("Define search radius")
 age = st.slider("Chose your km radius", 0, 15)
 st.write("You chose ", age, "km.")
@@ -106,3 +107,53 @@ deck = pdk.Deck(
 
 # show the map in streamlit
 st.pydeck_chart(deck)
+
+# geocode address
+def geocode_address(address):
+    geolocator = Nominatim(user_agent="streamlit-app")
+    location = geolocator.geocode(address)
+    if location:
+        return location.latitude, location.longitude
+    else:
+        return None, None
+
+# title & input field for address
+st.subheader("Interactive Map with Address Search")
+address = st.text_input("Enter an address to locate on the map:")
+
+if address:
+    # geocode for the entered address
+    lat, lon = geocode_address(address)
+    if lat and lon:
+        st.write(f"Coordinates for '{address}': Latitude {lat}, Longitude {lon}")
+
+        # define view
+        view_state = pdk.ViewState(
+            latitude=lat,
+            longitude=lon,
+            zoom=15, 
+            pitch=0,
+        )
+
+        # Scatterplot layer to mark the location
+        layer = pdk.Layer(
+            "ScatterplotLayer",
+            data=pd.DataFrame({"latitude": [lat], "longitude": [lon]}),
+            get_position="[longitude, latitude]",
+            get_color=[255, 0, 0],  # Red marker
+            get_radius=100,  # Marker radius
+        )
+
+        # Deck.gl map
+        deck = pdk.Deck(
+            layers=[layer],
+            initial_view_state=view_state,
+            map_style="mapbox://styles/mapbox/streets-v11",
+        )
+
+        # Show the map
+        st.pydeck_chart(deck)
+    else:
+        st.error("Address not found. Please try again.")
+else:
+    st.write("Enter an address above to display it on the map.")
