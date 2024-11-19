@@ -5,7 +5,6 @@ import numpy as np
 from datetime import date
 import datetime
 import pydeck as pdk
-from geopy.geocoders import Nominatim
 
 # something for the map to work (idk what)
 MAPBOX_API_TOKEN = "pk.eyJ1IjoidmljaWlpIiwiYSI6ImNtM211cmxkZDA3YTIya3Mzc2Vzd3JwaG0ifQ.Zzo3SdjM9RiwV1cLSnRIyw"
