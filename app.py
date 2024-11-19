@@ -2,7 +2,7 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-from datetime import date
+import datetime
 import pydeck as pdk
 
 # something for the map to work (idk what)
