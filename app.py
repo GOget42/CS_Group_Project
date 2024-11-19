@@ -90,9 +90,10 @@ view_state = pdk.ViewState(
 
 # deck.gl map
 layer = pdk.Layer(
-    data,
+    "ScatterplotLayer"
+    data=[],
     get_position='[longitude, latitude]',
-    get_radius=100,
+    get_radius=0,
     get_colour=[255, 0, 0],
 )
 
