@@ -35,7 +35,7 @@ def ckan_request(
         return None
 
 
-def get_data(id: str) -> Optional[str]:
+def get_ckan_data(id: str) -> Optional[str]:
     """
     Fetches a dataset from the CKAN API by its ID, downloads all available CSV files,
     and saves them to the 'raw' directory under their English or German title names.

@@ -11,3 +11,4 @@ Thumbs.db
 data/raw/*
 data/clean/*
 data/training/*
+/data/api/request_tracker.json
