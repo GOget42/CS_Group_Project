@@ -8,4 +8,6 @@ env/
 .ipynb_checkpoints/
 .DS_Store
 Thumbs.db
-data/
+data/raw/*
+data/clean/*
+data/training/*
