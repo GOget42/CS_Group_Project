@@ -8,52 +8,56 @@ from geopy.geocoders import Nominatim
 
 def main():
 
-    # problems:
-    # damage: "you selected" has to display the right things
-    # reset filters is not workingggg
+    st.image("logo.png", width=400)
 
-
+    st.logo("logo.png", size="large", icon_image="logo.png")
     # Mapbox API Token
     MAPBOX_API_TOKEN = "pk.eyJ1IjoidmljaWlpIiwiYSI6ImNtM211cmxkZDA3YTIya3Mzc2Vzd3JwaG0ifQ.Zzo3SdjM9RiwV1cLSnRIyw"
 
     # Title
-    st.header("Wreckognizer")
-    st.markdown("Predict. Protect. Prevent.")
-
-
-    st.write("Wreckognize uses machine learning with clutters to analyze accident data and predict the severity and likelihood of personal injury or property damage. Designed for emergency services, such as police or ambulance, as well as city planners, our tool transforms raw data into actionable insights, empowering communities and organizations to enhance safety and prepare for potential risks.")
+    # st.header("Wreckognizer") 
+    # st.markdown("Predict. Protect. Prevent.")
+    st.write("")
+    st.write("Wreckognizer uses machine learning with clutters to analyze accident data and predict the severity and likelihood of personal injury or property damage. Designed for emergency services, such as police or ambulance, as well as city planners, our tool transforms raw data into actionable insights, empowering communities and organizations to enhance safety and prepare for potential risks.")
+    st.write("")
 
     # Date picker
-    st.subheader("Date  and Time Picker")
-    default_date = date.today()
-    selected_date = st.date_input("Choose a date:", value=default_date)
+    st.sidebar.subheader("Date  and Time Picker")
+    default_date = date.today() 
+    selected_date = st.sidebar.date_input("Choose a date:", value=default_date, format="DD.MM.YYYY")
     default_time = datetime.time(datetime.datetime.now().hour, datetime.datetime.now().minute)
-    t = st.time_input("Choose a time of day:", value=default_time)
-    st.write("You selected:", selected_date, t)
+    t = st.sidebar.time_input("Choose a time of day:", value=default_time)
+    st.sidebar.write("You selected:", selected_date, t)
+    st.sidebar.write("")
 
     # Risk Level
-    st.subheader("Risk Level")
-    option = st.selectbox("Select the risk level:", ("Low Risk", "Moderate Risk", "High Risk", "Critical Risk"))
-    st.write("You selected:", option)
+    st.sidebar.subheader("Risk Level")
+    option = st.sidebar.selectbox("Select the risk level:", ("Low Risk", "Moderate Risk", "High Risk", "Critical Risk"))
+    st.sidebar.write("You selected:", option)
+    st.sidebar.write("")
 
     # personal or property damage
-    st.subheader("Type of Damage")
-    personal_injury = st.checkbox("Personal Injury")
-    property_damage = st.checkbox("Property Damage")
-    st.write("You selected:") # make it workk
+    st.sidebar.subheader("Type of Damage")
+    personal_injury = st.sidebar.checkbox("Personal Injury")
+    property_damage = st.sidebar.checkbox("Property Damage")
 
-    # reset filters button
-    st.button("Reset All Filters") # make it work..
-
-    # put in "you selected: "
+    if personal_injury and property_damage:
+        st.sidebar.write("You selected: Personal Injury and Property Damage")
+    elif property_damage:
+        st.sidebar.write("You selected: Propery Damage")
+    elif personal_injury:
+        st.sidebar.write("You selected: Personal Injury")
+    else: 
+        st.sidebar.write("You selected: ")
 
     # Coordinates for the center of Zürich
     latitude_zurich = 47.366669
     longitude_zurich = 8.55
 
     # Input field for address search
-    st.subheader("Interactive Map with Address Search")
+    st.subheader("Address Search")
     address = st.text_input("Enter an address to locate on the map:")
+    st.write("")
 
     st.subheader("Radius Level")
     # Map view state centered on Zürich
@@ -104,7 +108,7 @@ def main():
             )
 
             # Scatterplot layer to mark the location
-            layer = pdk.Layer(
+            circle_layer = pdk.Layer(
                 "ScatterplotLayer",
                 data=pd.DataFrame({"latitude": [lat], "longitude": [lon]}),
                 get_position="[longitude, latitude]",
@@ -112,9 +116,32 @@ def main():
                 get_radius=scatterplot_radius,
             )
 
+            marker_layer = pdk.Layer(
+                "IconLayer",
+                data=pd.DataFrame({
+                    "latitude": [lat],
+                    "longitude": [lon],
+                    "icon_data": ["pin"],
+                }),
+                get_position="[longitude, latitude]",
+                icon_atlas="C:/Users/waffe/streamlit/pin.png",  # Replace with your image path
+                icon_mapping={
+                    "pin": {
+                        "x": 0,
+                        "y": 0,
+                        "width": 128,
+                        "height": 128,
+                        "anchorY": 128,
+                    }
+                },
+                size_scale=15,
+            )
+
+
+
             # Update the map with the marker
             deck = pdk.Deck(
-                layers=[layer],
+                layers=[circle_layer, marker_layer],
                 initial_view_state=view_state,
                 map_style="mapbox://styles/mapbox/streets-v11",
             )
