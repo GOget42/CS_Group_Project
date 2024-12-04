@@ -1,5 +1,9 @@
 from modules.ckan_api import get_ckan_data
 from modules.open_meteo_api import get_open_meteo_data
+import sys
+import os
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../modules')))
 
 
 def main():
