@@ -31,7 +31,7 @@ In addition, our tool empowers cities to analyze accident hotspots using interac
    - Additional features like weather conditions, pedestrian density, and traffic volume were integrated to enhance predictions.
 
 2. **Model Training**:
-   - Multiple Machine Learning models were trained and tested, focusing on **Logistic Regression** and **Random Forest** classifiers.
+   - Multiple Machine Learning models were trained and tested, focusing on **Logistic Regression**, **Random Forest** and **XGBoost** classifiers.
    - Hyperparameter tuning for Random Forest was conducted using **RandomizedSearchCV** and **BayesSearchCV**.
 
 3. **Deployment**:
