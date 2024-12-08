@@ -286,8 +286,8 @@ if submit_button:
 
                 # Display the results
                 # Display the consolidated results
-                minor_count = predictions.sum()
-                severe_count = prediction_count - minor_count
+                severe_count = predictions.sum()
+                minor_count = prediction_count - severe_count
                 severity_labels = ["Severe" if pred == 1 else "Minor" for pred in predictions]
                 results_message = "\n".join([f"Prediction {i + 1}: {label}" for i, label in enumerate(severity_labels)])
                 st.success(f"**Prediction Results:**"
@@ -310,6 +310,7 @@ if submit_button:
 
                     # Display weather feature values
                     st.markdown("### Weather Data (Historic or Forecast)")
+                    st.caption('Credit to Open-Meteo for their API: Open-Meteo.com')
                     st.write(f"- Temperature: {first_period_weather['temperature_2m_period_0']} °C")
                     st.write(f"- Precipitation: {first_period_weather['precipitation_period_0']} mm")
                     st.write(f"- Snowfall: {first_period_weather['snowfall_period_0']} cm")
