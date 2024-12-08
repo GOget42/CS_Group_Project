@@ -4,8 +4,11 @@ import json
 import requests
 import csv
 from typing import Dict, Any, Optional, List, Tuple
+
+from statsmodels.tsa.vector_ar.var_model import forecast
 from tqdm import tqdm
 from config import TRACKER_PATH
+import pandas as pd
 
 
 def load_tracker_data() -> Dict[str, Any]:
@@ -144,7 +147,7 @@ def open_meteo_request(
     temperature_unit: str = 'celsius',
     windspeed_unit: str = 'kmh',
     precipitation_unit: str = 'mm',
-    base_url: str = "https://archive-api.open-meteo.com/v1/archive"
+    base_url: str = "https://archive-api.open-meteo.com/v1/archive",
 ) -> Optional[Dict[str, Any]]:
     """Send a request to the Open Meteo API and return the data.
 
@@ -183,7 +186,7 @@ def open_meteo_request(
         'timezone': timezone,
         'temperature_unit': temperature_unit,
         'windspeed_unit': windspeed_unit,
-        'precipitation_unit': precipitation_unit
+        'precipitation_unit': precipitation_unit,
     }
 
     try:
@@ -205,39 +208,3 @@ def open_meteo_request(
     except requests.RequestException as e:
         print(f"HTTP Error: {e}")
         return None
-
-
-def get_open_meteo_data(
-        start_date: str = "2012-01-01",
-        end_date: str = "2012-01-02"
-) -> bool:
-    """Retrieve data from Open Meteo API and save it to a CSV file.
-
-    Args:
-        start_date (str, optional): The start date in 'YYYY-MM-DD' format.
-        end_date (str, optional): The end date in 'YYYY-MM-DD' format.
-
-    Returns:
-        bool: True if data was successfully retrieved and saved, False otherwise.
-    """
-    data = open_meteo_request(start_date=start_date, end_date=end_date)
-
-    if data is None:
-        print("Failed to retrieve data.")
-        return False
-
-    try:
-        total_rows = len(next(iter(data.values())))
-        # Save the CSV file in the same directory as this script
-        csv_file_path = os.path.join('..', 'raw', 'weather_data.csv')
-        with open(csv_file_path, mode='w', newline='') as file:
-            writer = csv.DictWriter(file, fieldnames=data.keys())
-            writer.writeheader()
-            # Transpose rows by zipping dictionary values
-            for row in tqdm(zip(*data.values()), total=total_rows, desc="Saving data"):
-                writer.writerow(dict(zip(data.keys(), row)))
-        print(f"Weather data saved successfully at {csv_file_path}.")
-        return True
-    except IOError as e:
-        print(f"Error writing to CSV file: {e}")
-        return False

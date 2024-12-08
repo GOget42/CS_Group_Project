@@ -27,8 +27,8 @@ In addition, our tool empowers cities to analyze accident hotspots using interac
 
 ## 🛠️ **How It Works**
 1. **Data Collection**:
-   - Accident data for Zürich (20xx–20yy) obtained via an API.
-   - Additional features like weather conditions, pedestrian density, and traffic volume were integrated to enhance predictions.
+   - Accident data for Zürich (2012–2023) obtained via an API.
+   - Additional features like weather conditions, pedestrian density, and traffic volume were also integrated using an api, to enhance predictions.
 
 2. **Model Training**:
    - Multiple Machine Learning models were trained and tested, focusing on **Logistic Regression**, **Random Forest** and **XGBoost** classifiers.
