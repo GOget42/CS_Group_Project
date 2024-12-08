@@ -7,7 +7,5 @@ st.markdown("""
 - Use machine learning to analyze accident data.
 - Predict accident severity for city planning and emergency services.
 - Make informed decisions to enhance public safety.
-
-👉 **[Get Started](Analyse Historic Data.py)** to explore accident trends in Zurich city.
 """)
 
