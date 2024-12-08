@@ -32,7 +32,7 @@ In addition, our tool empowers cities to analyze accident hotspots using interac
 
 2. **Model Training**:
    - Multiple Machine Learning models were trained and tested, focusing on **Logistic Regression**, **Random Forest** and **XGBoost** classifiers.
-   - Hyperparameter tuning for Random Forest was conducted using **RandomizedSearchCV** and **BayesSearchCV**.
+   - Hyperparameter tuning for Random Forest and XGBoost was conducted using **RandomizedSearchCV** and **BayesSearchCV**.
 
 3. **Deployment**:
    - The best-performing model is deployed in a **Streamlit** web application.
