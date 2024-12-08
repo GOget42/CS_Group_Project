@@ -1,10 +1,12 @@
 from modules.ckan_api import get_ckan_data
-from modules.open_meteo_api import get_open_meteo_data
+from modules.open_meteo_api import open_meteo_request
 import sys
 import os
+import csv
+from tqdm import tqdm
 
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../modules')))
-
+raw_folder_path = os.path.join(os.path.dirname(__file__), '../raw')
+os.makedirs(raw_folder_path, exist_ok=True)
 
 def main():
     total_size_gb = 5.7  # Adjust the total size if necessary
@@ -76,14 +78,36 @@ def ckan_data_download() -> bool:
 
 
 def open_meteo_data_download() -> bool:
-    """Download weather data from Open Meteo API and save it to a CSV file.
-
-    Returns:
-        bool: True if data was downloaded successfully, False otherwise.
-    """
     start_date = "2012-01-01"
     end_date = "2023-12-31"
-    success = get_open_meteo_data(start_date, end_date)
+    base_url = "https://archive-api.open-meteo.com/v1/archive"
+
+    data = open_meteo_request(
+        start_date=start_date,
+        end_date=end_date,
+        base_url=base_url,
+    )
+
+    if data is None:
+        print("Failed to retrieve data.")
+        return False
+
+    try:
+        total_rows = len(next(iter(data.values())))
+        csv_file_path = os.path.join('..', 'raw', 'weather_data.csv')
+        with open(csv_file_path, mode='w', newline='') as file:
+            writer = csv.DictWriter(file, fieldnames=data.keys())
+            writer.writeheader()
+            # Transpose rows by zipping dictionary values
+            for row in tqdm(zip(*data.values()), total=total_rows, desc="Saving data"):
+                writer.writerow(dict(zip(data.keys(), row)))
+        print(f"Weather data saved successfully at {csv_file_path}.")
+        success = True
+    except IOError as e:
+        print(f"Error writing to CSV file: {e}")
+        return False
+
+
     if success:
         print("Weather data downloaded successfully.")
     else:
