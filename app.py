@@ -8,6 +8,6 @@ st.markdown("""
 - Predict accident severity for city planning and emergency services.
 - Make informed decisions to enhance public safety.
 
-👉 **[Get Started](PAGE1_URL)** to explore accident trends in Zurich city.
+👉 **[Get Started](Analyse Historic Data.py)** to explore accident trends in Zurich city.
 """)
 
