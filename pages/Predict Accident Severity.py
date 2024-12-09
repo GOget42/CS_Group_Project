@@ -274,7 +274,9 @@ if submit_button:
                 input_df_transformed = transform(input_df)
 
                 # Predict severity
-                predictions = model.predict(input_df_transformed)
+                optimal_threshold = 0.2
+                predictions = model.predict_proba(input_df_transformed)[:, 1]
+                predictions = (predictions >= optimal_threshold).astype(int)
 
                 # Update session_state with predicted locations and predictions
                 predicted_locations = list(zip(closest_lats, closest_lons))  # List of (lat, lon)
