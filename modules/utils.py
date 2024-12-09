@@ -105,8 +105,6 @@ def assign_weather(df, weather, number_of_periods, features):
         temp.rename(columns=rename_dict, inplace=True)
 
         # Merge with the main dataframe
-        print(df)
-        print(temp)
         df = df.merge(
             temp,
             on=['dateTime'],
@@ -140,10 +138,48 @@ def get_weather(df, selected_datetime):
     return df
 
 def transform(df):
+    # Drop the unwanted columns
     drop_features = ['dateTime']
-    df.drop(columns=drop_features, inplace=True)
+    df = df.drop(columns=drop_features, inplace=False)
+
+    # Load the preprocessor
     preprocessor = load('data/inference/preprocessor.pkl')
-    return preprocessor.transform(df)
+
+    # Define the feature lists as used during preprocessing
+    numerical_features = [
+        'traffic_volume_0_period_0', 'traffic_volume_1_period_0', 'traffic_volume_2_period_0',
+        'traffic_volume_0_period_1', 'traffic_volume_1_period_1', 'traffic_volume_2_period_1',
+        'pedestrian_volume_0_period_0', 'pedestrian_volume_1_period_0', 'pedestrian_volume_2_period_0',
+        'pedestrian_volume_0_period_1', 'pedestrian_volume_1_period_1', 'pedestrian_volume_2_period_1',
+        'temperature_2m_period_0', 'precipitation_period_0', 'snowfall_period_0', 'snow_depth_period_0',
+        'surface_pressure_period_0', 'cloud_cover_period_0', 'temperature_2m_period_1',
+        'precipitation_period_1', 'snowfall_period_1', 'snow_depth_period_1',
+        'surface_pressure_period_1', 'cloud_cover_period_1', 'temperature_2m_period_2',
+        'precipitation_period_2', 'snowfall_period_2', 'snow_depth_period_2',
+        'surface_pressure_period_2', 'cloud_cover_period_2', 'temperature_2m_period_3',
+        'precipitation_period_3', 'snowfall_period_3', 'snow_depth_period_3',
+        'surface_pressure_period_3', 'cloud_cover_period_3'
+    ]
+
+    categorical_features = [
+        'AccidentType', 'AccidentInvolvingPedestrian', 'AccidentInvolvingBicycle',
+        'AccidentInvolvingMotorcycle', 'RoadType', 'month', 'weekday', 'hour'
+    ]
+
+    # Transform the dataframe
+    transformed = preprocessor.transform(df)
+
+    # Get the one-hot encoded feature names for categorical variables
+    cat_onehot_features = preprocessor.named_transformers_['cat'] \
+        .named_steps['onehot'].get_feature_names_out(categorical_features)
+
+    # Combine numerical and categorical feature names
+    processed_features = numerical_features + list(cat_onehot_features)
+
+    # Convert the transformed ndarray to a DataFrame with the appropriate column names
+    df_transformed = pd.DataFrame(transformed, columns=processed_features, index=df.index)
+
+    return df_transformed
 
 def translate_columns(df):
     # --- Define Mapping Dictionaries ---
