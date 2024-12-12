@@ -2,6 +2,7 @@ import requests
 from typing import Optional, Dict, Any
 import os
 from tqdm import tqdm
+from config import DATA_PATH
 
 def ckan_request(
     action: str,
@@ -36,22 +37,6 @@ def ckan_request(
 
 
 def get_ckan_data(id: str) -> Optional[str]:
-    """
-    Fetches a dataset from the CKAN API by its ID, downloads all available CSV files,
-    and saves them to the 'raw' directory under their English or German title names.
-
-    Parameters:
-    - id (str): The dataset ID to fetch.
-
-    Returns:
-    - Optional[str]: The name of the last saved file if successful, otherwise None.
-
-    Raises:
-    - FileNotFoundError: If the 'raw' directory does not exist.
-    - KeyError: If the dataset does not contain the expected keys like 'resources'.
-    - ValueError: If no CSV resource is found in the dataset.
-    - requests.RequestException: If an HTTP request fails.
-    """
     base_url = 'https://opendata.swiss/api/3/action/'
     action = 'package_show'
     params = {"id": id}
@@ -67,7 +52,7 @@ def get_ckan_data(id: str) -> Optional[str]:
         if not resources:
             raise ValueError(f"No resources found in dataset ID: {id}")
 
-        raw_dir = "../raw"
+        raw_dir = os.path.join(DATA_PATH, "raw")
         if not os.path.exists(raw_dir):
             raise FileNotFoundError(f"Directory '{raw_dir}' does not exist.")
 
@@ -89,7 +74,7 @@ def get_ckan_data(id: str) -> Optional[str]:
                     total=total_size,
                     unit='B',
                     unit_scale=True,
-                    unit_divisor=1024
+                    unit_divisor=1024,
                 ) as bar:
                     for chunk in response.iter_content(chunk_size=1024):
                         file.write(chunk)

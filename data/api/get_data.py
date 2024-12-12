@@ -1,11 +1,13 @@
 from modules.ckan_api import get_ckan_data
 from modules.open_meteo_api import open_meteo_request
-import sys
+from config import DATA_PATH
 import os
 import csv
 from tqdm import tqdm
 
-raw_folder_path = os.path.join(os.path.dirname(__file__), '../raw')
+# This file is a "script" that you can run to automatically download all the data that we used in our project.
+
+raw_folder_path = os.path.join(DATA_PATH, 'raw')
 os.makedirs(raw_folder_path, exist_ok=True)
 
 def main():
@@ -18,7 +20,7 @@ def main():
 
     if confirmation == 'y':
         print("Starting the download process...")
-        # ckan_success = ckan_data_download()
+        ckan_success = ckan_data_download()
         meteo_success = open_meteo_data_download()
 
         """if ckan_success and meteo_success:
@@ -65,7 +67,6 @@ def ckan_data_download() -> bool:
             print(f"Error while downloading '{dataset_name}': {e}")
             failed_datasets.append(dataset_name)
 
-    # Summary of the process
     print("\nDownload process completed.")
     print(f"Successfully downloaded datasets: {downloaded_datasets}/{len(dataset_ids)}")
     if failed_datasets:
@@ -78,6 +79,12 @@ def ckan_data_download() -> bool:
 
 
 def open_meteo_data_download() -> bool:
+    """
+    Function to download datasets using the OPEN-METEO API.
+
+    Returns:
+        bool: True if all datasets were downloaded successfully, False otherwise.
+    """
     start_date = "2012-01-01"
     end_date = "2023-12-31"
     base_url = "https://archive-api.open-meteo.com/v1/archive"
